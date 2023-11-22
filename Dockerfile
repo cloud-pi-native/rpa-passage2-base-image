@@ -20,10 +20,11 @@ RUN install_packages curl unzip jq vim libapache2-mod-auth-mellon curl libxml2-u
 RUN mkdir -p $MELLON_ROOT_PATH/saml &&\
     mkdir -p $MELLON_ROOT_PATH/scripts && \
     chmod a+w $MELLON_ROOT_PATH/saml
+COPY conf/mellon.conf /opt/bitnami/apache/conf/extra/mellon.conf
 
 # Droits 0755 au scripts
-# RUN chmod a+rwx,g-w,o-w $MELLON_ROOT_PATH/scripts/*
-# RUN chmod a+rw,a-x,o-w /opt/bitnami/apache2/conf/extra/mellon-diagnostics.conf.disabled /opt/bitnami/apache2/conf/extra/mellon-ssl.conf /opt/bitnami/apache2/conf/extra/mellon.conf /opt/bitnami/apache2/conf/httpd.conf
+#RUN chmod a+rwx,g-w,o-w $MELLON_ROOT_PATH/scripts/*
+#RUN chmod a+rw,a-x,o-w /opt/bitnami/apache2/conf/extra/mellon-diagnostics.conf.disabled /opt/bitnami/apache2/conf/extra/mellon-ssl.conf /opt/bitnami/apache2/conf/extra/mellon.conf /opt/bitnami/apache2/conf/httpd.conf
 
 # Création des fichiers de logs
 RUN touch "${APACHE_LOGS_DIR}/mellon_diagnostics"
@@ -34,6 +35,12 @@ RUN chmod -R g+rwX "${APACHE_LOGS_DIR}" && chmod a+rwx ${APACHE_LOGS_DIR}/mellon
 RUN ln -sf "/dev/stdout" "${APACHE_LOGS_DIR}/mellon-access_log"
 RUN ln -sf "/dev/stderr" "${APACHE_LOGS_DIR}/mellon_diagnostics"
 RUN ln -sf "/dev/stderr" "${APACHE_LOGS_DIR}/mellon-error_log"
+
+# Gestion du health_check pour le deploiement Kube
+COPY conf/httpd.conf /opt/bitnami/apache/conf/httpd.conf
+RUN mkdir /opt/bitnami/apache/cgi-bin
+COPY conf/health_check.cgi /opt/bitnami/apache/cgi-bin/health_check.cgi
+RUN chmod +x /opt/bitnami/apache/cgi-bin/health_check.cgi
 
 # Modify the default container user
 USER 1001
