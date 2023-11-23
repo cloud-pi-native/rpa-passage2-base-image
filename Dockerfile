@@ -15,6 +15,7 @@ RUN install_packages curl unzip jq vim libapache2-mod-auth-mellon curl libxml2-u
     rm -rf /var/lib/apt/lists/* &&\
     apt purge &&\
     apt autoremove -y
+RUN ln -s /usr/lib/apache2/modules/mod_auth_mellon.so /opt/bitnami/apache/momdules/mod_auth_mellon.so
 
 # Création des repertoires de travail mellon
 RUN mkdir -p $MELLON_ROOT_PATH/saml &&\
