@@ -17,10 +17,6 @@ RUN install_packages curl unzip jq vim libapache2-mod-auth-mellon curl libxml2-u
     apt autoremove -y
 RUN ln -s /usr/lib/apache2/modules/mod_auth_mellon.so /opt/bitnami/apache/modules/mod_auth_mellon.so
 
-# Création des repertoires de travail mellon
-RUN mkdir -p "${APACHE_CERTS_DIR}" && mkdir -p "${APACHE_MELLON_DIR}"
-RUN chmod -R g+rwX "${APACHE_CERTS_DIR}"
-
 # Gestion du health_check pour le deploiement Kube
 COPY conf/httpd.conf /opt/bitnami/apache/conf/httpd.conf
 RUN mkdir /opt/bitnami/apache/cgi-bin
