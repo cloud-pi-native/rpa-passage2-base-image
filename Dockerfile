@@ -6,9 +6,9 @@ FROM base as mellon
 # Change user to perform privileged actions
 USER 0
 
-ENV APACHE_LOGS_DIR="/opt/bitnami/apache2/logs"
-ENV APACHE_CONF_EXTRA="/opt/bitnami/apache/conf/extra"
-ENV MELLON_ROOT_PATH="/opt/bitnami/mellon"
+ENV APACHE_CERTS_DIR="/opt/bitnami/apache/conf/bitnami/certs"
+ENV APACHE_ROOT_DIR="/opt/bitnami/apache/"
+ENV APACHE_MELLON_DIR="/opt/bitnami/apache/conf/bitnami/mellon"
 
 # Installation mellon et curl pour récupérer metadata IdP
 RUN install_packages curl unzip jq vim libapache2-mod-auth-mellon curl libxml2-utils gettext-base &&\
@@ -18,19 +18,8 @@ RUN install_packages curl unzip jq vim libapache2-mod-auth-mellon curl libxml2-u
 RUN ln -s /usr/lib/apache2/modules/mod_auth_mellon.so /opt/bitnami/apache/modules/mod_auth_mellon.so
 
 # Création des repertoires de travail mellon
-RUN mkdir -p $MELLON_ROOT_PATH/saml &&\
-    mkdir -p $MELLON_ROOT_PATH/scripts && \
-    chmod a+w $MELLON_ROOT_PATH/saml
-
-# Création des fichiers de logs
-RUN touch "${APACHE_LOGS_DIR}/mellon_diagnostics"
-RUN touch "${APACHE_LOGS_DIR}/mellon-error_log"
-RUN touch "${APACHE_LOGS_DIR}/mellon-access_log" 
-RUN chmod -R g+rwX "${APACHE_LOGS_DIR}" && chmod a+rwx ${APACHE_LOGS_DIR}/mellon*
-
-RUN ln -sf "/dev/stdout" "${APACHE_LOGS_DIR}/mellon-access_log"
-RUN ln -sf "/dev/stderr" "${APACHE_LOGS_DIR}/mellon_diagnostics"
-RUN ln -sf "/dev/stderr" "${APACHE_LOGS_DIR}/mellon-error_log"
+RUN mkdir -p "${APACHE_CERTS_DIR}" && mkdir -p "${APACHE_MELLON_DIR}"
+RUN chmod -R g+rwX "${APACHE_CERTS_DIR}"
 
 # Gestion du health_check pour le deploiement Kube
 COPY conf/httpd.conf /opt/bitnami/apache/conf/httpd.conf
