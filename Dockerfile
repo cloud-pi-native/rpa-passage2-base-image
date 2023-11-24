@@ -15,17 +15,12 @@ RUN install_packages curl unzip jq vim libapache2-mod-auth-mellon curl libxml2-u
     rm -rf /var/lib/apt/lists/* &&\
     apt purge &&\
     apt autoremove -y
-RUN ln -s /usr/lib/apache2/modules/mod_auth_mellon.so /opt/bitnami/apache/momdules/mod_auth_mellon.so
+RUN ln -s /usr/lib/apache2/modules/mod_auth_mellon.so /opt/bitnami/apache/modules/mod_auth_mellon.so
 
 # Création des repertoires de travail mellon
 RUN mkdir -p $MELLON_ROOT_PATH/saml &&\
     mkdir -p $MELLON_ROOT_PATH/scripts && \
     chmod a+w $MELLON_ROOT_PATH/saml
-COPY conf/mellon.conf /opt/bitnami/apache/conf/extra/mellon.conf
-
-# Droits 0755 au scripts
-#RUN chmod a+rwx,g-w,o-w $MELLON_ROOT_PATH/scripts/*
-#RUN chmod a+rw,a-x,o-w /opt/bitnami/apache2/conf/extra/mellon-diagnostics.conf.disabled /opt/bitnami/apache2/conf/extra/mellon-ssl.conf /opt/bitnami/apache2/conf/extra/mellon.conf /opt/bitnami/apache2/conf/httpd.conf
 
 # Création des fichiers de logs
 RUN touch "${APACHE_LOGS_DIR}/mellon_diagnostics"
