@@ -16,7 +16,6 @@ RUN install_packages curl unzip jq vim libapache2-mod-auth-mellon curl libxml2-u
     apt purge &&\
     apt autoremove -y
 RUN ln -s /usr/lib/apache2/modules/mod_auth_mellon.so /opt/bitnami/apache/modules/mod_auth_mellon.so
-RUN ln -s /usr/lib/apache2/modules/mod_lbmethod_byrequests.so /opt/bitnami/apache/modules/mod_lbmethod_byrequests.so
 
 # Gestion du health_check pour le deploiement Kube
 COPY conf/httpd.conf /opt/bitnami/apache/conf/httpd.conf
