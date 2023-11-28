@@ -6,9 +6,9 @@ FROM base as mellon
 # Change user to perform privileged actions
 USER 0
 
-ENV APACHE_CERTS_DIR="/opt/bitnami/apache/conf/bitnami/certs"
+ENV APACHE_CERTS_DIR="/srv/bitnami/apache/conf/bitnami/certs"
 ENV APACHE_ROOT_DIR="/opt/bitnami/apache/"
-ENV APACHE_MELLON_DIR="/opt/bitnami/apache/conf/bitnami/mellon"
+ENV APACHE_MELLON_DIR="/srv/bitnami/apache/conf/bitnami/mellon"
 
 # Installation mellon et curl pour récupérer metadata IdP
 RUN install_packages curl unzip jq vim libapache2-mod-auth-mellon curl libxml2-utils gettext-base &&\
